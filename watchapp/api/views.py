@@ -8,6 +8,37 @@ from rest_framework.views import APIView #class based
 #from rest_framework import mixins
 from rest_framework import generics
 
+#viewsets and router
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets
+
+#Viewsets and Router implementations
+class StreamPlatformVS(viewsets.ViewSet):
+    """
+    A simple ViewSet for listing or retrieving users.
+    """
+    def list(self, request):
+        queryset = StreamPlatforms.objects.all()
+        serializer = StreamPlatformSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = StreamPlatforms.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = StreamPlatformSerializer(user)
+        return Response(serializer.data)
+    
+    def create(self, request):
+        serializer=StreamPlatformSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+
+
+
+    
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
 
@@ -18,7 +49,7 @@ class ReviewCreate(generics.CreateAPIView):
     
 
 # Concrete View Class
-class ReviewList(generics.ListAPIView):
+class ReviewList(generics.ListAPIView): 
     #queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
