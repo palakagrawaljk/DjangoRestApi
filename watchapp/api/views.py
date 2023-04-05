@@ -12,29 +12,36 @@ from rest_framework import generics
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 
-#Viewsets and Router implementations
-class StreamPlatformVS(viewsets.ViewSet):
-    """
-    A simple ViewSet for listing or retrieving users.
-    """
-    def list(self, request):
-        queryset = StreamPlatforms.objects.all()
-        serializer = StreamPlatformSerializer(queryset, many=True)
-        return Response(serializer.data)
+#modelViewSet
 
-    def retrieve(self, request, pk=None):
-        queryset = StreamPlatforms.objects.all()
-        user = get_object_or_404(queryset, pk=pk)
-        serializer = StreamPlatformSerializer(user)
-        return Response(serializer.data)
+#class StreamPlatformVS(viewsets.ReadOnlyModelViewSet): # do not want to put/delete
+class StreamPlatformVS(viewsets.ModelViewSet):
+    queryset = StreamPlatforms.objects.all()
+    serializer_class = StreamPlatformSerializer
+
+# #Viewsets and Router implementations
+# class StreamPlatformVS(viewsets.ViewSet):
+#     """
+#     A simple ViewSet for listing or retrieving users.
+#     """
+#     def list(self, request):
+#         queryset = StreamPlatforms.objects.all()
+#         serializer = StreamPlatformSerializer(queryset, many=True)
+#         return Response(serializer.data)
+
+#     def retrieve(self, request, pk=None):
+#         queryset = StreamPlatforms.objects.all()
+#         user = get_object_or_404(queryset, pk=pk)
+#         serializer = StreamPlatformSerializer(user)
+#         return Response(serializer.data)
     
-    def create(self, request):
-        serializer=StreamPlatformSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors)
+#     def create(self, request):
+#         serializer=StreamPlatformSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         else:
+#             return Response(serializer.errors)
 
 
 
